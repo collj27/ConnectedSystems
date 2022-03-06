@@ -1,0 +1,56 @@
+/*!
+ * Start Bootstrap - Heroic Features (https://startbootstrap.com/template-overviews/heroic-features)
+ * Copyright 2013-2017 Start Bootstrap
+ * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-heroic-features/blob/master/LICENSE)
+ */
+
+body {
+  padding-top: 54px;
+}
+
+@media (min-width: 992px) {
+  body {
+    padding-top: 56px;
+  }
+}
+
+.card {
+  height: 100%;
+}
+
+.toggle-off {
+    box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+}
+.toggle.off {
+    border-color: rgba(0, 0, 0, .25);
+}
+
+.toggle-handle {
+    background-color: white;
+    border: thin rgba(0, 0, 0, .25) solid;
+}
+
+.jumbotron {
+    padding: 1rem 2rem !important;
+}
+
+.p-min-bottom {
+  margin-bottom: 0 !important;
+}
+
+.chartWithOverlay {
+   position: relative;
+   padding-top: 20px;
+   /*width: 700px;*/
+}
+.overlay {
+   /*width: 200px;
+   height: 200px;*/
+   position: absolute;
+   top: 0px;   /* chartArea top  */
+   /* left: 180px; /* chartArea left */
+   width: 150px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    text-align: center;
+    background-color: rgba(233,236,239,0.85);
+}

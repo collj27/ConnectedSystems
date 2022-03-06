@@ -1,0 +1,56 @@
+<!-- BODY of the main page of the app  -->
+<div class="container">
+
+  <div class="row my-4">
+    <div class="col-9">
+      <h4>Total Unlocks Last 12 Hours</h4>
+      <div id="chart"></div>  <!-- Chart will get inserted here -->
+      <h4>All Data Last 7 Days</h4>
+      <div id="container"></div>  <!-- Data Table will get inserted here -->
+    </div>
+    <div class="col-3">
+      <div class="row">
+        {{#each fobs}}  <!-- Section renders a box for each fob passed into the page in the 'fobs' array -->
+        <div class="col-12">
+          <div class="pb-3">
+            <div class="card bg-light" id="fob{{Fob_ID}}">
+              <div class="card-header">
+                <span class="float-right" id="fob{{Fob_ID}}_status">LOCKED</span>
+                Fob #{{Fob_ID}}
+              </div>
+              <div class="card-body">
+                <a href="/fob/{{Fob_ID}}" class="card-link float-right font-weight-light"><i class="far fa-edit"></i> Edit</a>
+                <p class="card-text">Assigned: {{Person_Name}}</p>
+              </div>
+              <div class="card-footer font-weight-light">
+                Last: <span id="fob{{Fob_ID}}_act"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        {{/each}}
+        <div class="col-12">  <!-- The Hub details get rendered here -->
+          <div class="pb-3">
+            <div class="card bg-light">
+              <!-- Below line calls webcam attached to RPi to load it's live view in the Hub box -->
+              <img class="card-img-top img-fluid mx-auto d-block" style="-webkit-user-select: none;" src="http://192.168.1.108:8081/" alt="Live View">
+              <div class="text-white" style="position: absolute; top: 8px;right: 16px;">Live View</div>
+              <div class="card-header">{{hub_name}} (ID #{{hub_id}})</div>
+              <div class="card-body">
+                <a href="/hub" class="card-link float-right font-weight-light"><i class="far fa-edit"></i> Edit</a>
+                <p class="card-text">Location: <br/>{{hub_location}}</p>
+              </div>
+              <div class="card-footer text-muted">
+                {{hub_unlocks}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <!-- /.row -->
+
+</div>
+<!-- /.container -->

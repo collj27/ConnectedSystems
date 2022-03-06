@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Quest 2 - Team 11 - Trinh - Boyd - Coll</title>
+    <script type="text/javascript" src="./node_modules/dygraphs/dist/dygraph.js"></script>
+    <link rel="stylesheet" src="./node_modules/dygraphs/dist/dygraph.css" />
+    <link rel="stylesheet" href="./css/styles.css">
+  </head>
+  <body>
+    <h2>Quest 2 - Team 11 - Trinh - Boyd - Coll</h2>
+    <div id="graphdiv"></div> <!-- Wheel Speed: m/s -->
+    <div id="graphdiv_optic1" class="graphdiv_os"></div> <!-- IR Range: 0.2-1.5m -->
+    <div id="graphdiv_optic2" class="graphdiv_os"></div> <!-- LIDAR: 0.3-12m, max brought down to 5m for graph -->
+    <div id="graphdiv_sonic1" class="graphdiv_os"></div> <!-- Single: 0.3-5m -->
+    <div id="graphdiv_sonic2" class="graphdiv_os"></div> <!-- Double: 0.02-4m -->
+
+    <script type="text/javascript">
+      function getRandomInt(max) {
+        return Math.floor(Math.random() * Math.floor(max));
+      }
+      var dgdata = [];
+      var dgdata_o1 = [];
+      var dgdata_o2 = [];
+      var dgdata_s1 = [];
+      var dgdata_s2 = [];
+      var t = new Date();
+      dgdata.push([t, 0]);
+      dgdata_o1.push([t, 0]);
+      dgdata_o2.push([t, 0]);
+      dgdata_s1.push([t, 0]);
+      dgdata_s2.push([t, 0]);
+      g = new Dygraph(
+        // containing div
+        document.getElementById("graphdiv"),dgdata,
+          {
+            drawPoints: true,
+            legend: 'always',
+            valueRange: [0.00, 0.20],
+            title: 'Wheel Speed',
+            labels: ['Time', 'm/s'],
+            axes: {
+              x: {
+                axisLabelFormatter: function (d, gran) {
+                  return d.toLocaleTimeString();
+                },
+                valueFormatter: function (ms) {
+                  return new Date(ms).toLocaleTimeString();
+                }
+              }
+            }
+      });
+      go1 = new Dygraph(
+        // containing div
+        document.getElementById("graphdiv_optic1"),dgdata_o1,
+          {
+            drawPoints: true,
+            legend: 'always',
+            valueRange: [0.2, 1.50],
+            title: 'Optical : IR Range Finder',
+            labels: ['Time', 'M'],
+            axes: {
+              x: {
+                axisLabelFormatter: function (d, gran) {
+                  return d.toLocaleTimeString();
+                },
+                valueFormatter: function (ms) {
+                  return new Date(ms).toLocaleTimeString();
+                }
+              }
+            }
+      });
+      go2 = new Dygraph(
+        // containing div
+        document.getElementById("graphdiv_optic2"),dgdata_o2,
+          {
+            drawPoints: true,
+            legend: 'always',
+            valueRange: [0.3, 5.00],
+            title: 'Optical : LIDAR',
+            labels: ['Time', 'M'],
+            axes: {
+              x: {
+                axisLabelFormatter: function (d, gran) {
+                  return d.toLocaleTimeString();
+                },
+                valueFormatter: function (ms) {
+                  return new Date(ms).toLocaleTimeString();
+                }
+              }
+            }
+      });
+      gs1 = new Dygraph(
+        // containing div
+        document.getElementById("graphdiv_sonic1"),dgdata_s1,
+          {
+            drawPoints: true,
+            legend: 'always',
+            valueRange: [0.3, 5.00],
+            title: 'Sonic : Single',
+            labels: ['Time', 'M'],
+            axes: {
+              x: {
+                axisLabelFormatter: function (d, gran) {
+                  return d.toLocaleTimeString();
+                },
+                valueFormatter: function (ms) {
+                  return new Date(ms).toLocaleTimeString();
+                }
+              }
+            }
+      });
+      gs2 = new Dygraph(
+        // containing div
+        document.getElementById("graphdiv_sonic2"),dgdata_s2,
+          {
+            drawPoints: true,
+            legend: 'always',
+            valueRange: [0.02, 4.00],
+            title: 'Sonic : Double',
+            labels: ['Time', 'M'],
+            axes: {
+              x: {
+                axisLabelFormatter: function (d, gran) {
+                  return d.toLocaleTimeString();
+                },
+                valueFormatter: function (ms) {
+                  return new Date(ms).toLocaleTimeString();
+                }
+              }
+            }
+      });
+    </script>
+  </body>
+
+  <script>
+    require('./renderer.js')
+  </script>
+</html>

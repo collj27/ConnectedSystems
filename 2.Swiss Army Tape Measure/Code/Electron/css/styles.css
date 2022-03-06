@@ -1,0 +1,16 @@
+.dygraph-legend { text-align: right; background: none; }
+
+#graphdiv {
+  background-color: white;
+  margin:5px 5px 50px 5px;
+  min-height:250px;
+  clear: both;
+}
+
+.graphdiv_os {
+  float: left;
+  width: 48%;
+  background-color: white;
+  margin:5px 5px 50px 5px;
+  min-height:250px;
+}

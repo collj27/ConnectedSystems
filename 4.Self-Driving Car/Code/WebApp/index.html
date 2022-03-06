@@ -1,0 +1,281 @@
+<!-- Main page of the app  -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Quest4">
+    <meta name="author" content="Group11-Boyd-Coll-Trinh">
+
+    <!-- Page title -->
+    <title>Quest 4 Web App - Group 11</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/heroic-features.css" rel="stylesheet">
+    <link href="css/all.css" rel="stylesheet"> <!-- FontAwesome styles -->
+
+  </head>
+
+  <body>
+
+    <!-- Navigation bar, including app status -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">Autonomous Car</a>
+        <span class="float-right"><i class="text-light font-weight-light">App Status: </i><span id="app_status" class="text-success">Polling Car</span></span>
+      </div>
+    </nav>
+
+    <!-- Body  -->
+    <div class="container">
+
+      <!-- Jumbotron Header -->
+      <header class="jumbotron my-4">
+        <!-- Displays current segment of track and current status -->
+        <p class="p-min-bottom text-muted">Beacon: <i id="currLoc">1</i></p>
+        <h2 id="currStat">Checking...</h2>
+      </header>
+
+      <!-- Area below header -->
+      <div class="row text-center">
+        <!-- Displays buttons showing (and allowing changing of) car off/on/unk -->
+        <div class="col-6 mb-4">
+          <!-- <h4>Car Status</h4> -->
+          <button id="status-check" class="btn btn-default disabled" disabled>Checking car...</button>
+          <button onclick="stopCar()" id="status-running" class="btn btn-success" style="display: none;"><i class="fas fa-stop"></i> Car Running</button>
+          <button onclick="startCar()" id="status-stopped" class="btn btn-danger" style="display: none;"><i class="fas fa-play"></i> Car Idle</button>
+          <button id="status-unk" class="btn btn-warning disabled" style="display: none;" disabled><i class="fas fa-exclamation-triangle"></i> Car Unknown</button>
+
+        </div>
+        <!-- Displays buttons allowing adding/removing of virtual beacon -->
+        <div class="col-6 mb-4" id="div-beacon">
+        </div>
+
+        <!-- Displays car image and numerical values -->
+        <div class="col-6">
+          <i class="fas fa-arrow-up"></i> Forward Dist: <span id="fd"></span> cm
+        </div>
+        <div class="col-6">
+          Side Dist: <span id="sd"></span> cm <i class="fas fa-arrow-right"></i>
+        </div>
+        <div class="col-12">
+          <img src="https://store-cdn.arduino.cc/usa/catalog/product/cache/1/image/500x375/f8876a31b63532bbba4e781c30024a0a/a/h/ah00016_back.jpg" class="img-fluid" alt="Car...">
+        </div>
+        <div class="col-6 mb-4">
+          <i class="fas fa-angle-left"></i> Left Wheel: <span id="lws"></span> cm/min
+        </div>
+        <div class="col-6 mb-4">
+          Right Wheel: <span id="rws"></span> <i class="fas fa-angle-right"></i> cm/min
+        </div>
+
+      </div>
+      <!-- /.row -->
+
+    </div>
+    <!-- /.container -->
+    <!-- /.Body  -->
+
+
+    <!-- Footer -->
+    <footer class="py-5 bg-dark">
+      <div class="container">
+        <p class="m-0 text-center text-white">Copyright &copy; Group 11, Quest 4 Web App 2018</p>
+      </div>
+      <!-- /.container -->
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Javascript driving page functionality -->
+    <script>
+      // Global variable used to track failed data polling from the ESP (and stop polling)
+      var increment = 0;
+      var seg = "";
+      var state = "";
+      var rws = "";
+      var lws = "";
+      var fd = "";
+      var sd = "";
+      // Timer calling the ESP every second to update the page
+      var myVar = setInterval(updateSegState, 1000);
+
+      function updateSegState() {
+        changeNumbers(fd,sd,lws,rws);
+        var currStat = "Forward";
+        // Get the Segment and State data from the ESP to update variables
+        $.ajax({
+          url: 'http://192.168.1.133/sss',
+          type: 'GET',
+          dataType: "text",
+          success: function(result){
+            console.log("success: " + result);
+            // Update variables with ESP data
+            res = result.split(",");
+            // Variables for the in-page data
+            seg = res[0];
+            state = res[1];
+            rws = res[2];
+            lws = res[3];
+            fd = res[4];
+            sd = res[5];
+            updateDisplay(state, seg, rws, lws, fd, sd);
+            // Clear previous errors polling ESP
+            if (increment > 0) {
+              increment = 0;
+              changeAppStatus(increment);
+            }
+          },
+          error: function(error){
+            console.log("in error");
+            console.log(error);
+            increment++;
+            changeAppStatus(increment);
+            // If there has been a polling error for more than 3 seconds, stop checking the ESP and indicate the error
+            if (increment >= 4) {
+              clearInterval(myVar);
+              state = "E";
+            }
+          }
+        });
+
+      }
+
+      function updateDisplay(state, seg, rws, lws, fd, sd) {
+        var segDisp = "";
+        // Update the page based on the status
+        switch(state) {
+          case "D":
+            currStat = "Driving Forward";
+            $('#status-running').show();
+            $('#status-stopped').hide();
+            $('#status-check').hide();
+            break;
+          case "A":
+            currStat = "Adjusting...";
+            $('#status-running').show();
+            $('#status-stopped').hide();
+            $('#status-check').hide();
+            break;
+          case "W":
+            currStat = "Waiting...";
+            $('#status-running').show();
+            $('#status-stopped').hide();
+            $('#status-check').hide();
+            break;
+          case "T":
+            currStat = "Turning";
+            $('#status-running').show();
+            $('#status-stopped').hide();
+            $('#status-check').hide();
+            break;
+            break;
+          case "I":
+            currStat = "Idle";
+            $('#status-running').hide();
+            $('#status-stopped').show();
+            $('#status-check').hide();
+            break;
+          case "E":
+            currStat = "Error! Unknown!";
+            $('#status-running').hide();
+            $('#status-stopped').hide();
+            $('#status-check').hide();
+            $('#status-unk').show();
+            break;
+          default:
+            currStat = "N/A";
+            $('#status-running').hide();
+            $('#status-check').hide();
+            $('#status-unk').hide();
+            $('#status-stopped').show();
+        }
+        switch(seg) {
+          case "0":
+            segDisp = "Red";
+            break;
+          case "1":
+            segDisp = "Blue";
+            break;
+          case "2":
+            segDisp = "Green";
+            break;
+          case "0":
+            segDisp = "Off";
+            break;
+          default:
+            segDisp = "";
+            break;
+        }
+        // Update the page with the variable data
+        document.getElementById("currLoc").innerHTML = segDisp;
+        document.getElementById("currStat").innerHTML = currStat;
+        document.getElementById("rws").innerHTML = rws;
+        document.getElementById("lws").innerHTML = lws;
+        document.getElementById("fd").innerHTML = fd;
+        document.getElementById("sd").innerHTML = sd;
+      }
+
+      // Updates the text in the menu to indicate status of polling the ESP (every second)
+      function changeAppStatus(count) {
+        if(count == 0) {
+          document.getElementById('app_status').innerHTML = "Polling";
+          $('#app_status').removeClass("text-warning");
+          $('#app_status').addClass("text-success");
+        } else if(count < 4) {
+          document.getElementById('app_status').innerHTML = "Trying..." + count;
+          $('#app_status').removeClass("text-success");
+          $('#app_status').addClass("text-warning");
+        } else {
+          document.getElementById('app_status').innerHTML = "Error!";
+          $('#app_status').removeClass("text-warning");
+          $('#app_status').addClass("text-danger");
+          $('#currStat').addClass("text-danger");
+        }
+      }
+
+      function changeNumbers(fd,sd,lws,rws) {
+        document.getElementById('fd').innerHTML = fd;
+        document.getElementById('sd').innerHTML = sd;
+        document.getElementById('lws').innerHTML = lws;
+        document.getElementById('rws').innerHTML = rws;
+      }
+
+      // When the stop button is pressed, update buttons, then call function to update the car
+      function stopCar() {
+        console.log("stop button pressed");
+        $('#status-running').hide();
+        $('#status-stopped').show();
+        updateCar();
+      }
+
+      // When the start button is pressed, update buttons, then call function to update the car
+      function startCar() {
+        console.log("start button pressed");
+        $('#status-running').show();
+        $('#status-stopped').hide();
+        updateCar();
+      }
+
+      // Actually sends a signal to the ESP to start/stop the car
+      function updateCar() {
+        $.ajax({
+          url: 'http://192.168.1.133/power',
+          type: 'GET',
+          success: function(result){
+            console.log("success");
+          },
+          error: function(error){
+            console.log(error);
+          }
+        });
+      }
+    </script>
+
+  </body>
+
+</html>

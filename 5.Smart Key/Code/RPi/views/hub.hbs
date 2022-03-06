@@ -1,0 +1,28 @@
+<!-- BODY of the hub page of the app  -->
+<div class="container">
+
+  <!-- Hub form displaying hub details which can be edited and saved using the "Save" button at the bottom -->
+  <div class="row mb-4 mt-4">
+    <div class="col-12">
+      <form action="/hub" method="post">
+        <div class="form-group row">
+          <label for="formHubName" class="col-3 col-form-label">Hub Name</label>
+          <div class="col-9">
+            <input type="text" class="form-control" id="formHubName" name="formHubName" value="{{hub_name}}">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="formHubLocation" class="col-3 col-form-label">Hub Location</label>
+          <div class="col-9">
+            <input type="text" class="form-control" id="formHubLocation" name="formHubLocation" value="{{hub_location}}">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">Save</button>
+      </form>
+    </div>
+
+  </div>
+  <!-- /.row -->
+
+</div>
+<!-- /.container -->

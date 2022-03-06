@@ -1,0 +1,143 @@
+<!-- Main page of the app, EXCEPT the BODY, which is loaded from index.hbs  -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Quest3">
+    <meta name="author" content="Group11-Boyd-Coll-Trinh">
+
+    <!-- Page title passed in from server will be inserted below -->
+    <title>{{title}}</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/heroic-features.css" rel="stylesheet">
+    <link href="css/bootstrap-toggle.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+
+    <!-- Navigation bar, including power "switch" -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">Connected A/C</a>
+        <span class="float-right"><i class="text-light font-weight-light mr-2">Power </i><input id="power-toggle" type="checkbox" {{ac_status}} data-toggle="toggle" data-onstyle="success" data-offstyle="danger" data-size="small"></span>
+      </div>
+    </nav>
+
+    <!-- Body from index.hbs will be inserted below -->
+    {{{body}}}
+
+    <!-- Footer -->
+    <footer class="py-5 bg-dark">
+      <div class="container">
+        <p class="m-0 text-center text-white">Copyright &copy; Group 11, Quest 3 Web App 2018</p>
+      </div>
+      <!-- /.container -->
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- JavaScript for this template -->
+    <script src="js/bootstrap-toggle.js"></script>
+    <!-- Including the loader for the charts -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    <!-- Javascript driving page functionality -->
+    <script>
+      // When the page is finished loading, call the "/degrees" URL to get data for chart and load chart
+      $(function(){
+        // Get the data for the chart
+        $.ajax({
+          url: '/degrees',
+          type: 'GET',
+          success: function(result){
+            console.log("success");
+            // Call function to create the chart
+            createChart(result);
+        }});
+      });
+
+      // When the power button is changed, update the ESP and the database
+      $(function() {
+        $('#power-toggle').change(function() {
+          $.ajax({
+            url: '/power_form',
+            type: 'POST',
+            data: { state: $(this).prop('checked') },
+            success: function(result){
+              console.log("success");
+            },
+            error: function(error){
+              console.log(error);
+            }
+          });
+        });
+      });
+
+      // Global function to setup and render the chart; data from GET above is passed in as 'data' variable
+      function createChart(data){
+        var options = {
+          chart: {
+            height: 250,
+            type: 'line',
+            animations: { enabled: false }
+          },
+          stroke: {
+            curve: 'smooth'
+          },
+          series: [{
+            // This is the "area" chart indicating when the AC is on
+            name: 'AC On',
+            type: 'area',
+            data: data[2]
+          }, {
+            // This is the "line" chart showing measured temperatures
+            name: 'Temp',
+            type: 'line',
+            data: data[1]
+          }],
+          fill: {
+            type:'solid',
+            // 0.35 indicates the opacity for the area chart; 1 for the line chart
+            opacity: [0.35, 1],
+          },
+          // This loads the time data into the x-axis labels
+          labels: data[0],
+          markers: {
+            size: 0
+          },
+          // This moves the y-axis temp labels to the right-hand side and adds the label "Temp"
+          yaxis: [
+            {
+              opposite: true,
+              title: {
+                text: 'Temp',
+              },
+            },
+          ],
+          // This displays the data values on mouse over
+          tooltip: {
+            shared: true,
+            intersect: false
+          }
+        }
+        // This tells the program where to render the chart on the page
+        var chart = new ApexCharts(
+          document.querySelector("#chart"),
+          options
+        );
+        // This actually renders the chart on the page
+        chart.render();
+      }
+    </script>
+
+  </body>
+
+</html>

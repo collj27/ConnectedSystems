@@ -1,0 +1,55 @@
+/*!
+ * Start Bootstrap - The Big Picture (https://startbootstrap.com/template-overviews/the-big-picture)
+ * Copyright 2013-2017 Start Bootstrap
+ * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-the-big-picture/blob/master/LICENSE)
+ */
+
+body {
+  background-color: #DCDCDC;
+}
+
+/* Highlights the beacon fragment being received with brackets and a color of blue */
+.fragrec:after{content:"]"}
+.fragrec:before{content:"["}
+.fragrec {color: blue}
+
+/* Makes the beacon fragment section look "click-able" when it is actively receiving data,
+ * otherwise it looks non-clickable */
+.fragActive { cursor: pointer; }
+.fragInactive { cursor: auto; }
+
+/* Enables and disables animation for the icon indicating beacon data is being recieved */
+@keyframes fadeIn {
+  from { opacity: 0; }
+}
+.animate-flicker {
+    animation: fadeIn 1s infinite alternate;
+}
+.animate-flicker-off {
+    color: rgba(0,0,0,0) !important;
+}
+
+/* Rotations used on the chevrons to indicate turn directions */
+.rotate-45 {
+    -o-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.rotate-135 {
+    -o-transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+    transform: rotate(135deg);
+}
+
+.rotate-225 {
+    -o-transform: rotate(2255deg);
+    -webkit-transform: rotate(225deg);
+    transform: rotate(225deg);
+}
+
+.rotate-315 {
+    -o-transform: rotate(315deg);
+    -webkit-transform: rotate(315deg);
+    transform: rotate(315deg);
+}

@@ -1,0 +1,44 @@
+<!-- BODY of the main page of the app  -->
+<div class="container">
+
+  <!-- Jumbotron Header -->
+  <header class="jumbotron my-4">
+    <p class="p-min-bottom text-muted">Current Temp</p>
+    <h1 class="display-3">{{temp}}&#176;</h1>
+    <!-- Chart gets inserted into DIV below -->
+    <div id="chart"></div>
+  </header>
+
+  <!-- Area below chart -->
+  <div class="row text-center">
+    <!-- Pulls live webcam view from RPi -->
+    <div class="col-lg-6 col-md-6 mb-4">
+      <h4>Live View</h4>
+      <img class="img-fluid rounded mx-auto d-block" style="-webkit-user-select: none;" src="http://128.197.175.151:8081/">
+    </div>
+
+    <!-- Displays schedule setting area and includes FORM to set schedule -->
+    <div class="col-lg-6 col-md-6 mb-4">
+      <h4>Schedule: {{#if sched_saved}}<span class="text-success font-weight-bold">Set</span>{{else}}<span class="text-danger font-weight-bold">Not Set</span>{{/if}}</h4>
+      <form action="/sched_form" method="post">
+        <div class="form-group row">
+          <label for="formTimeOn" class="col-3 col-form-label">Time On</label>
+          <div class="col-9">
+            <input type="time" class="form-control" id="formTimeOn" name="formTimeOn" value={{sched_on}}>  <!-- "16:00:00" -->
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="formTimeOff" class="col-3 col-form-label">Time Off</label>
+          <div class="col-9">
+            <input type="time" class="form-control" id="formTimeOff" name="formTimeOff" value={{sched_off}}> <!-- "08:00:00" -->
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">Save</button>
+      </form>
+    </div>
+
+  </div>
+  <!-- /.row -->
+
+</div>
+<!-- /.container -->

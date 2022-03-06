@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>{{title}}</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/the-big-picture.css" rel="stylesheet">
+    <link href="/css/all.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-bottom">
+      <div class="container">
+        <a class="navbar-brand" href="#">Find the Beacons!</a>
+        <div class="navbar" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <span class="text-muted">&copy; Group 11, 2018
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Body from index.hbs will be inserted below -->
+    {{{body}}}
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom Javascript for this site -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var motion = '';  // Will be set to the ID of the most recently invoked motion button
+      var prevMotion = '';  // Will be set to the ID of the most recent previous motion button
+      var b_id = '';  // Will be set to the ID of the beacon when data recieved
+      var b_frag = '';  // Will be set to the url fragment of the beacon when data recieved
+      var socket = io();  // Sets up socket.io client for use
+
+      // When the page is loaded, make the beacon fragment div clickable
+      $(document).ready(function () {
+          $("#fragDiv").click(function (){
+              if (b_id != '') {
+                // When the beacon fragment div is clicked, call the function below
+                fragLock();
+              }
+          });
+      });
+
+      // Receive updated front sensor value; update page
+      socket.on('sensor', function (data) {
+        updateSensor(data);
+        console.log("sensor: " + data);
+      });
+
+      // Receive updated beacon fragment data; update page
+      socket.on('beacon', function (data) {
+        if (b_id == '') {
+          $('#fragIndicator').removeClass("animate-flicker-off");
+          $('#fragIndicator').addClass("animate-flicker");
+        }
+        updateFragment(data);
+        console.log("idFrag: " + data);
+      });
+
+      // Receive stop motion notice; update page
+      socket.on('stop', function () {
+        motionStop();
+        console.log("stop called");
+      });
+
+      // Find sensor display span element and update the innerhtml with the new sensor value
+      function updateSensor(dist) {
+        document.getElementById('sensorDist').innerHTML = dist;
+      }
+
+      // Find appropriate fragment display span element and update the innerhtml with the new fragment value
+      function updateFragment(idFrag) {
+        b_id = idFrag.substring(0, 1);  // 1-4
+        b_frag = idFrag.substring(2, 12);  // aaaaaaaaaa
+        document.getElementById('frag'+b_id).innerHTML = b_frag;
+        $('#frag'+b_id).addClass("fragrec");
+        $('#fragDiv').removeClass('fragInactive');
+        $('#fragDiv').addClass('fragActive');
+      }
+
+      // Find current motion display span element and update the classes to change color on stop
+      function motionStop() {
+        if (motion != '') {
+          $('#'+motion).removeClass("btn-success");
+          $('#'+motion).addClass("btn-danger");
+          prevMotion = motion;
+          motion = '';
+        }
+      }
+
+      // When a motion button is clicked, send the command to the ESP (via socket.io)
+      function sendMotion(direction) {
+        motion = direction;
+        console.log("motion: " + motion);
+        socket.emit('motion', direction.substring(2));
+        $('#'+motion).removeClass("btn-outline-secondary");
+        $('#'+motion).addClass("btn-success");
+        if (prevMotion != '') {
+          $('#'+prevMotion).removeClass("btn-danger");
+          $('#'+prevMotion).addClass("btn-outline-secondary");
+        }
+      }
+
+      // When a beacon fragment is locked, send the details to the node server to store the value (via socket.io)
+      function fragLock() {
+        socket.emit('fragLock', { id: b_id, frag: b_frag });
+        $('#frag'+b_id).removeClass("fragrec");
+        $('#fragDiv').removeClass('fragActive');
+        $('#fragDiv').addClass('fragInactive');
+        $('#fragIndicator').removeClass("animate-flicker");
+        $('#fragIndicator').addClass("animate-flicker-off");
+        b_id = '';
+        b_frag = '';
+      }
+    </script>
+
+  </body>
+
+</html>

@@ -1,0 +1,48 @@
+<section>
+  <div class="container pb-4">
+    <div class="row pb-4">
+      <!-- Displays the front sensor distance value -->
+      <div class="col-6 text-center pb-4">
+        Front Dist: <span id="sensorDist"></span>
+      </div>
+      <!-- Displays the beacon fragments -->
+      <div class="col-6 text-center pb-4">
+        <div id="fragDiv" class="fragActive">
+          Message: <i id="fragIndicator" class=" text-danger fas fa-wifi fa-rotate-90 animate-flicker-off mr-3"></i><span id="frag1">{{frag1}}</span><span id="frag2">{{frag2}}</span><span id="frag3">{{frag3}}</span><span id="frag4">{{frag4}}</span>
+        </div>
+      </div>
+      <!-- Top row of motion buttons -->
+      <div class="col-2 text-center">
+        <button type="button" id="m_FL" onclick="sendMotion('m_FL')" class="btn btn-outline-secondary btn-sm font-weight-normal"><i class="fas fa-chevron-up rotate-315"></i> </button>
+      </div>
+      <div class="col-8 text-center">
+        <button type="button" id="m_F3" onclick="sendMotion('m_F3')" class="btn btn-outline-secondary btn-sm font-weight-bold"><i class="fas fa-chevron-up"></i> 5 sec.</button>
+        <button type="button" id="m_F2" onclick="sendMotion('m_F2')" class="btn btn-outline-secondary btn-sm font-weight-normal"><i class="fas fa-chevron-up"></i> 3 sec.</button>
+        <button type="button" id="m_F1" onclick="sendMotion('m_F1')" class="btn btn-outline-secondary btn-sm font-weight-light"><i class="fas fa-chevron-up"></i> 1 sec.</button>
+      </div>
+      <div class="col-2 text-center">
+        <button type="button" id="m_FR" onclick="sendMotion('m_FR')" class="btn btn-outline-secondary btn-sm font-weight-normal"><i class="fas fa-chevron-up rotate-45"></i> </button>
+      </div>
+      <!-- Second row of motion buttons + web cam video -->
+      <div class="col-2 my-auto text-center">
+        <button type="button" id="m_L0" onclick="sendMotion('m_L0')" class="btn btn-outline-secondary btn-sm font-weight-normal"><i class="fas fa-chevron-up fa-rotate-270"></i> </button>
+      </div>
+      <div class="col-8">
+        <img class="mx-auto d-block" style="-webkit-user-select: none;" src="http://192.168.1.108:8081/" alt="Live View">
+      </div>
+      <div class="col-2 my-auto text-center">
+        <button type="button" id="m_R0" onclick="sendMotion('m_R0')" class="btn btn-outline-secondary btn-sm font-weight-normal"><i class="fas fa-chevron-up fa-rotate-90"></i> </button>
+      </div>
+      <!-- Bottom row of motion buttons -->
+      <div class="col-2 text-center pb-4">
+        <button type="button" id="m_BL" onclick="sendMotion('m_BL')" class="btn btn-outline-secondary btn-sm font-weight-normal"><i class="fas fa-chevron-up rotate-225"></i> </button>
+      </div>
+      <div class="col-8 text-center">
+        <button type="button" id="m_B0" onclick="sendMotion('m_B0')" class="btn btn-outline-secondary btn-sm font-weight-normal"><i class="fas fa-chevron-up fa-rotate-180"></i> Backward</button>
+      </div>
+      <div class="col-2 text-center">
+        <button type="button" id="m_BR" onclick="sendMotion('m_BR')" class="btn btn-outline-secondary btn-sm font-weight-normal"><i class="fas fa-chevron-up rotate-135"></i> </button>
+      </div>
+    </div>
+  </div>
+</section>

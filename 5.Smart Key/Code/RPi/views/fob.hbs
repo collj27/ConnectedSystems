@@ -1,0 +1,35 @@
+<!-- BODY of the fob page of the app  -->
+<div class="container">
+
+  <!-- Hub form displaying fob details which can be edited and saved using the "Save" button at the bottom -->
+  <div class="row mb-4 mt-4">
+    <div class="col-12">
+      <form action="/fob/update" method="post">
+        <div class="form-group row">
+          <label for="formFobId" class="col-3 col-form-label">Fob ID</label>
+          <div class="col-9">
+            <input type="text" class="form-control" id="formFobId" name="formFobId" hidden value="{{fob_id}}">
+            <input type="text" class="form-control" id="formFobId2" name="formFobId2" disabled value="{{fob_id}}">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="formPersonName" class="col-3 col-form-label">Person Name</label>
+          <div class="col-9">
+            <input type="text" class="form-control" id="formPersonName" name="formPersonName" value="{{person_name}}">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="formIPAddress" class="col-3 col-form-label">IP Address</label>
+          <div class="col-9">
+            <input type="text" class="form-control" id="formIPAddress" name="formIPAddress" value="{{ip_address}}">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">Save</button>
+      </form>
+    </div>
+
+  </div>
+  <!-- /.row -->
+
+</div>
+<!-- /.container -->
